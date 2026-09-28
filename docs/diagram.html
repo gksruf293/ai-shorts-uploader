@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+body{margin:0;background:#fff;font-family:"Segoe UI",sans-serif;color:#1d2230}
+.wrap{width:1600px;height:900px;position:relative}
+h1{position:absolute;left:60px;top:36px;margin:0;font-size:36px}
+.sub{position:absolute;left:60px;top:88px;font-size:20px;color:#5a6070}
+.box{position:absolute;border:3px solid #1d2230;border-radius:14px;padding:16px 20px;font-size:20px;background:#f6f7fa;line-height:1.4}
+.box b{display:block;font-size:22px;margin-bottom:6px}
+.g{background:#e8f4fb;border-color:#2a7fb8}.y{background:#fdf6e3;border-color:#b8860b}
+svg{position:absolute;left:0;top:0}
+.lbl{position:absolute;font-size:17px;color:#2a3140;background:#fff;padding:2px 6px}
+</style></head><body><div class="wrap" id="w"></div>
+<script>
+const kind = new URLSearchParams(location.search).get("kind");
+const w = document.getElementById("w");
+const arrow = (x1,y1,x2,y2) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#1d2230" stroke-width="3" marker-end="url(#a)"/>`;
+const defs = `<defs><marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#1d2230"/></marker></defs>`;
+if (kind === "arch") {
+  w.innerHTML = `<h1>AI Shorts Uploader — Architecture</h1><div class="sub">Single-operator CLI on the owner's PC · uploads only to the owner's own 6 channels</div>
+  <svg width="1600" height="900">${defs}${arrow(468,420,556,420)}${arrow(948,420,1036,420)}${arrow(752,436,752,656)}${arrow(1272,462,1272,656)}</svg>
+  <div class="box" style="left:60px;top:300px;width:360px"><b>Local production (owner's PC)</b>Rendered MP4 · thumbnail PNG · metadata JSON (title, description, tags, language) per channel</div>
+  <div class="box y" style="left:560px;top:300px;width:340px"><b>Uploader CLI (Node.js)</b>Reads metadata · confirms target channel ID · calls YouTube Data API v3</div>
+  <div class="box g" style="left:1040px;top:300px;width:420px"><b>YouTube Data API v3</b>videos.insert (privacyStatus = private/public)<br>thumbnails.set · commentThreads.insert<br>channels.list (mine=true, verify)</div>
+  <div class="box" style="left:560px;top:660px;width:340px"><b>Local token store</b>OAuth tokens per channel in the owner's user folder. Never sent anywhere except Google.</div>
+  <div class="box g" style="left:1040px;top:660px;width:420px"><b>Owner's YouTube channels (6)</b>AI 뜯어보기 · AI, Dissected · AI की परतें · AIをほどく · IA na Bancada · IA con Lupa</div>
+  <div class="lbl" style="left:484px;top:432px">files</div><div class="lbl" style="left:900px;top:470px">HTTPS + OAuth 2.0</div><div class="lbl" style="left:764px;top:530px">stores / reads tokens</div><div class="lbl" style="left:1284px;top:540px">uploads to</div>`;
+} else {
+  const steps = ["Owner renders a video locally and writes its metadata JSON","Owner runs: node upload.mjs --channel ko-KR --video PE-01","First run only: Google OAuth consent in browser — owner picks the channel and allows access (token saved locally)","Tool calls channels.list(mine) and checks the channel ID matches the target","videos.insert uploads the video as private with the prepared title/description/tags","thumbnails.set and commentThreads.insert add thumbnail and the owner's comment","Owner reviews the video in YouTube Studio and publishes it manually"];
+  w.innerHTML = `<h1>AI Shorts Uploader — User Flow</h1><div class="sub">Only user: the channel owner. No public sign-up, no third-party data.</div>` +
+    steps.map((s,i)=>`<div class="box ${i===2?'g':i===6?'y':''}" style="left:${60+ (i%2)*760}px;top:${150+Math.floor(i/2)*180}px;width:680px"><b>Step ${i+1}</b>${s}</div>`).join("");
+}
+</script></body></html>
